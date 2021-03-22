@@ -1,0 +1,12 @@
+{
+  "name": "making",
+  "displayName": "making",
+  "expo": {
+    "name": "making",
+    "slug": "making",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
