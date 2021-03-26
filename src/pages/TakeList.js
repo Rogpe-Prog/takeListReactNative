@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native'
 import { TextInput  } from 'react-native-paper'
 import Constants from 'expo-constants'
@@ -12,20 +12,30 @@ const TakeList = ({ navigation }) => {
     const [ name, setName ] = useState()
     const [ description, setDescription ] = useState()
 
+    const [books, setBooks] = useState([]);
+    
+    useEffect(() => {
+      AsyncStorage.getItem('item').then(data => {
+        const book = JSON.parse(data);
+        setBooks(book);
+      })
+    }, []);
+
 
     const onSave = async () => {
-        const id = Math.random(5000).toString()
+        const id = (Math.random()*5000).toFixed(0).toString()
 
         let newItens = {
             id,
             name,
             description
         }
-        itens.push(newItens)
+        books.push(newItens)
         //salva no AsyncStorage
-        await AsyncStorage.setItem('item', JSON.stringify(itens))
-        //navigation.goBack()
-        console.log(itens)
+     
+        await AsyncStorage.setItem('item', JSON.stringify(books))
+        navigation.goBack()
+        //console.log(itens)
 
     }
 
@@ -35,7 +45,7 @@ const TakeList = ({ navigation }) => {
         const jsonValue = await AsyncStorage.getItem('item')
         const test = JSON.parse(jsonValue)
   
-        console.log(jsonValue)
+        console.log(test)
 
 
      

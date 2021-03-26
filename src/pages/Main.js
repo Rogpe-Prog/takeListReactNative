@@ -8,14 +8,14 @@ Icon.loadFont();
 
 const Main = ({ navigation }) => {
 
-    const [itens, setItens] = useState([])
-
+    const [books, setBooks] = useState([]);
+    
     useEffect(() => {
-        AsyncStorage.getItem('item').then(data => {
-          const iten = JSON.parse(data);
-          setItens(iten);
-        })
-      }, []);
+      AsyncStorage.getItem('item').then(data => {
+        const book = JSON.parse(data);
+        setBooks(book);
+      })
+    }, []);
 
     return(
         <View style={styles.container}>
@@ -29,8 +29,8 @@ const Main = ({ navigation }) => {
             </View>
 
             <FlatList 
-                data={itens} 
-                keyExtractor={item => item.id}
+                data={books} 
+                keyExtractor={ (item, index) => item.key } ///chave dando erro!!!!!!!!!!!!!!!!!!!!!!!
                 renderItem={({ item }) => (
                 <View style={styles.itensContainer}>
 
