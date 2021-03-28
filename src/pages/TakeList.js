@@ -7,40 +7,72 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 Icon.loadFont();
 
-const TakeList = ({ navigation }) => {
+const TakeList = ({ route, navigation }) => {
+
+    const { item, isEdit } = route.params
+ 
+    const EdItem = {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        read: false,
+      }
     
-    const [ name, setName ] = useState()
-    const [ description, setDescription ] = useState()
+    const [ name, setName ] = useState(EdItem.name)
+    const [ description, setDescription ] = useState(EdItem.description)
+    const [ read, setRead ] = useState(EdItem.read)
     const [books, setBooks] = useState([]);
+
     
     useEffect(() => {
       AsyncStorage.getItem('item').then(data => {
         const book = JSON.parse(data);
-        setBooks(book)
+        setBooks(book) 
       })
     }, []);
 
-    const onSave = async () => {
-        const id = Math.random(5000).toString()
-        
-        let newItens = {
-            id,
-            name,
-            description
+    const isValid = () => {
+        if(name !== '' && name !== undefined){
+            return true
         }
-        books.push(newItens)
-        //salva no AsyncStorage
-        await AsyncStorage.setItem('item', JSON.stringify(books))
-        navigation.replace('Main')
+        return false
     }
 
-    const onShow = async () => {
-       await AsyncStorage.clear()
-        //recupera do AsyncStorage
-        const jsonValue = await AsyncStorage.getItem('item')
-        const test = JSON.parse(jsonValue)
-  
-        console.log(test)
+    const onSave = async () => {
+        if(isValid()){
+
+            if(isEdit){
+                let newItems = books
+        
+                newItems.map(item => {
+                    if(item.id === EdItem.id){
+                    item.name = name
+                    item.description = description
+                    item.read = read
+                    }
+                    return item
+                })
+        
+                await AsyncStorage.setItem('item', JSON.stringify(newItems))
+    
+            } else {
+                const id = Math.random(5000).toString()
+                
+                let newItens = {
+                    id,
+                    name,
+                    description
+                }
+                books.push(newItens)
+                //salva no AsyncStorage
+                await AsyncStorage.setItem('item', JSON.stringify(books))
+            }
+            navigation.replace('Main')
+
+        } else {
+            Alert.alert('Invalid data!')
+        }
+
     }
 
     return(
@@ -64,7 +96,7 @@ const TakeList = ({ navigation }) => {
   
             <TouchableOpacity
                 style={styles.cameraButton} 
-                onPress={onShow}   
+                onPress={() => {}}   
             >
                 <Icon name="photo-camera" size={18} color="#fff" />
             </TouchableOpacity>
@@ -75,7 +107,7 @@ const TakeList = ({ navigation }) => {
                 mode="contained" 
                 onPress={onSave}
             >
-                <Text style={styles.textBtnSave}>Save</Text>
+                <Text style={styles.textBtnSave}>{isEdit ? 'Edit' : 'Save'}</Text>
                
             </TouchableOpacity>
             

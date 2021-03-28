@@ -11,6 +11,7 @@ const Main = ({ navigation }) => {
     const [books, setBooks] = useState([]);
 
     const onScreenLoad = async () => {
+        //para não dar erro no AsyncStorage inicio com um "registro"
         const data = {
             id: '1',
             name: 'Take a iten',
@@ -18,19 +19,17 @@ const Main = ({ navigation }) => {
         }
 
         const dataAsync = await AsyncStorage.getItem('item')
-        console.log(dataAsync)
+        
         if(dataAsync === null || dataAsync === [] || dataAsync === undefined){
             books.push(data)
             await AsyncStorage.setItem('item', JSON.stringify(books))
         }    
-            
     }
+
     useEffect(() => {
         onScreenLoad()
-        console.log(books)
     }, [])
 
-   
     useEffect(() => {
       AsyncStorage.getItem('item').then(data => {
         const book = JSON.parse(data)
@@ -38,14 +37,46 @@ const Main = ({ navigation }) => {
       })
     }, []);
 
+    const onItemEdit = async (idItem) => {
+        const itemEdit = books.find(itemEdi => itemEdi.id === idItem)
+        navigation.navigate('TakeList', { item: itemEdit, isEdit: true})
+    }
+
+    const onDelete = async (idItem) => {
+        const newItem = books.filter(item => idItem !== item.id)
+        await AsyncStorage.setItem('item', JSON.stringify(newItem))
+        setBooks(newItem)
+    }
+
+    const onItemRead = async (id) => {
+        const newItem = books.map( item => {
+            if(item.id === id){
+                item.read = !item.read
+            }
+            return item
+        })
+        await AsyncStorage.setItem('item', JSON.stringify(newItem))
+        setBooks(newItem)
+    }
+
+    const onDeleteAll = async () => {
+        await AsyncStorage.clear()
+        navigator.navigate('TakeList')
+    }
+
     return(
         <View style={styles.container}>
             <View style={styles.toolbox}>
                 <Text style={styles.title}>Add new item...</Text> 
                 <TouchableOpacity
                     style={styles.toolboxButton}
-                    onPress={() => navigation.navigate('TakeList')}>
+                    onPress={() => navigation.navigate('TakeList',  { item: '', isEdit: false})}>
                     <Icon name="add" size={14} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.toolboxButtonX}
+                    onPress={onDeleteAll}>
+                    <Icon name="clear" size={14} color="#fff" />
                 </TouchableOpacity>
             </View>
 
@@ -57,21 +88,21 @@ const Main = ({ navigation }) => {
 
                     <TouchableOpacity 
                     style={styles.itemButton}
-                    onPress={() => {}}>
-                    <Text style={[styles.itemText, styles.itemRead]}>
+                    onPress={() => onItemRead(item.id)}>
+                    <Text style={[styles.itemText, item.read ? styles.itemRead : '']}>
                         {item.name}
                     </Text>
                     </TouchableOpacity>
                     
                     <TouchableOpacity 
                     style={styles.editButton} 
-                    onPress={() => {}}>
+                    onPress={() => onItemEdit(item.id)}>
                     <Icon name="create" size={14} color="#2ecc71" />
                     </TouchableOpacity>
                     
                     <TouchableOpacity 
                     style={styles.deleteButton} 
-                    onPress={() => {}}>
+                    onPress={() => onDelete(item.id)}>
                     <Icon name="delete" size={14} color="#e74c3c" />
                     </TouchableOpacity>
                 </View>
@@ -96,6 +127,18 @@ const styles = StyleSheet.create({
         height: 22,
         justifyContent: "center",
         alignItems: "center",
+        marginRight: 15,
+        marginBottom: 5,
+    },
+    toolboxButtonX: {
+        backgroundColor: "#c23616",
+        borderRadius: 50,
+        width: 22,
+        height: 22,
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 15,
+        marginBottom: 5,
     },
     toolbox: {
         flexDirection: "row",
@@ -114,16 +157,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemText: {
-
+        fontSize: 16,
+        color: '#2d3436',
     },
     itemRead: {
-
+        textDecorationLine: 'line-through',
+        color: '#95a5a6',
     },
     editButton: {
-
+        marginRight: 10,
     },
     deleteButton: {
-
+        marginRight: 5,
     },
 
 
