@@ -9,11 +9,32 @@ Icon.loadFont();
 const Main = ({ navigation }) => {
 
     const [books, setBooks] = useState([]);
-    
+
+    const onScreenLoad = async () => {
+        const data = {
+            id: '1',
+            name: 'Take a iten',
+            description: 'description note'
+        }
+
+        const dataAsync = await AsyncStorage.getItem('item')
+        console.log(dataAsync)
+        if(dataAsync === null || dataAsync === [] || dataAsync === undefined){
+            books.push(data)
+            await AsyncStorage.setItem('item', JSON.stringify(books))
+        }    
+            
+    }
+    useEffect(() => {
+        onScreenLoad()
+        console.log(books)
+    }, [])
+
+   
     useEffect(() => {
       AsyncStorage.getItem('item').then(data => {
-        const book = JSON.parse(data);
-        setBooks(book);
+        const book = JSON.parse(data)
+        setBooks(book)
       })
     }, []);
 
@@ -30,7 +51,7 @@ const Main = ({ navigation }) => {
 
             <FlatList 
                 data={books} 
-                keyExtractor={ (item, index) => item.key } ///chave dando erro!!!!!!!!!!!!!!!!!!!!!!!
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                 <View style={styles.itensContainer}>
 

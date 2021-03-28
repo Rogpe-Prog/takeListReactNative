@@ -8,23 +8,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 Icon.loadFont();
 
 const TakeList = ({ navigation }) => {
-    const [ itens, setItens ] = useState([])
+    
     const [ name, setName ] = useState()
     const [ description, setDescription ] = useState()
-
     const [books, setBooks] = useState([]);
     
     useEffect(() => {
       AsyncStorage.getItem('item').then(data => {
         const book = JSON.parse(data);
-        setBooks(book);
+        setBooks(book)
       })
     }, []);
 
-
     const onSave = async () => {
-        const id = (Math.random()*5000).toFixed(0).toString()
-
+        const id = Math.random(5000).toString()
+        
         let newItens = {
             id,
             name,
@@ -32,25 +30,17 @@ const TakeList = ({ navigation }) => {
         }
         books.push(newItens)
         //salva no AsyncStorage
-     
         await AsyncStorage.setItem('item', JSON.stringify(books))
-        navigation.goBack()
-        //console.log(itens)
-
+        navigation.replace('Main')
     }
 
     const onShow = async () => {
-       
+       await AsyncStorage.clear()
         //recupera do AsyncStorage
         const jsonValue = await AsyncStorage.getItem('item')
         const test = JSON.parse(jsonValue)
   
         console.log(test)
-
-
-     
-
-        //return jsonValue != null ? JSON.parse(jsonValue) : null;
     }
 
     return(
