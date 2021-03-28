@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, Alert, StyleSheet, SafeAreaView } from 'react-native'
 import { TextInput  } from 'react-native-paper'
 import Constants from 'expo-constants'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 Icon.loadFont();
+
 
 const TakeList = ({ route, navigation }) => {
 
@@ -21,8 +22,7 @@ const TakeList = ({ route, navigation }) => {
     const [ name, setName ] = useState(EdItem.name)
     const [ description, setDescription ] = useState(EdItem.description)
     const [ read, setRead ] = useState(EdItem.read)
-    const [books, setBooks] = useState([]);
-
+    const [books, setBooks] = useState([])
     
     useEffect(() => {
       AsyncStorage.getItem('item').then(data => {
@@ -67,7 +67,7 @@ const TakeList = ({ route, navigation }) => {
                 //salva no AsyncStorage
                 await AsyncStorage.setItem('item', JSON.stringify(books))
             }
-            navigation.replace('Main')
+            navigation.goBack()
 
         } else {
             Alert.alert('Invalid data!')
@@ -96,7 +96,7 @@ const TakeList = ({ route, navigation }) => {
   
             <TouchableOpacity
                 style={styles.cameraButton} 
-                onPress={() => {}}   
+                onPress={() => {} }   
             >
                 <Icon name="photo-camera" size={18} color="#fff" />
             </TouchableOpacity>
@@ -117,6 +117,7 @@ const TakeList = ({ route, navigation }) => {
             >
                 <Text>Cancel</Text>
             </TouchableOpacity>
+
         </View>
     )
 }

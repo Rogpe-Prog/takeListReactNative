@@ -35,7 +35,7 @@ const Main = ({ navigation }) => {
         const book = JSON.parse(data)
         setBooks(book)
       })
-    }, []);
+    }, [books]);
 
     const onItemEdit = async (idItem) => {
         const itemEdit = books.find(itemEdi => itemEdi.id === idItem)
