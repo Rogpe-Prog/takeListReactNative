@@ -2,7 +2,6 @@ import React from 'react'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 
 import Routes from './src/routes'
-import Appcam from './src/Appcam'
 
 const theme = {
   ...DefaultTheme,
@@ -16,13 +15,13 @@ const theme = {
 
 const App = () => {
   return (
-    <Appcam />
+    <PaperProvider theme={theme}>
+      <Routes />
+    </PaperProvider> 
   )
 }
 
 export default App
 
 
-{/* <PaperProvider theme={theme}>
-      <Routes />
-    </PaperProvider> */}
+

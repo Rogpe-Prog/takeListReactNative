@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Alert, StyleSheet, SafeAreaView } from 'react-native'
+import { View, Text, TouchableOpacity, Alert, StyleSheet, Modal, Image, ImageBackground, ScrollView } from 'react-native'
 import { TextInput  } from 'react-native-paper'
 import Constants from 'expo-constants'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import Photo from '../components/Photo'
+import Camera from '../components/Camera'
+
 
 Icon.loadFont();
 
@@ -17,12 +21,15 @@ const TakeList = ({ route, navigation }) => {
         name: item.name,
         description: item.description,
         read: false,
-      }
-    
+        photo: item.photo,
+      } 
+
     const [ name, setName ] = useState(EdItem.name)
     const [ description, setDescription ] = useState(EdItem.description)
     const [ read, setRead ] = useState(EdItem.read)
     const [books, setBooks] = useState([])
+    const [photo, setPhoto] = useState(EdItem.photo)
+    const [isModalVisible, setIsModalVisible] = useState(false)
     
     useEffect(() => {
       AsyncStorage.getItem('item').then(data => {
@@ -48,11 +55,13 @@ const TakeList = ({ route, navigation }) => {
                     if(item.id === EdItem.id){
                     item.name = name
                     item.description = description
-                    item.read = read
+                    item.read = read,
+                    item.photo = photo,
+                    console.log('Edit: ' + item.photo)
                     }
                     return item
                 })
-        
+                console.log('Edit: ' + newItems)
                 await AsyncStorage.setItem('item', JSON.stringify(newItems))
     
             } else {
@@ -61,7 +70,8 @@ const TakeList = ({ route, navigation }) => {
                 let newItens = {
                     id,
                     name,
-                    description
+                    description,
+                    photo
                 }
                 books.push(newItens)
                 //salva no AsyncStorage
@@ -75,7 +85,12 @@ const TakeList = ({ route, navigation }) => {
 
     }
 
+    const onCloseModal = () => setIsModalVisible(false)
+
+    const onChangePhoto = (newPhoto) => setPhoto(newPhoto)
+
     return(
+        <ScrollView>
         <View style={styles.container}>
             <Text style={styles.pageTitle}>New Item</Text>
             <TextInput
@@ -93,13 +108,35 @@ const TakeList = ({ route, navigation }) => {
                 numberOfLines={4}
                 onChangeText={text => setDescription(text)}
             />
+
+                <TouchableOpacity
+                    style={styles.cameraButton} 
+                    onPress={ () => {
+                        setIsModalVisible(true)
+                    } }   
+                    >
+                        <Icon name="photo-camera" size={18} color="#fff" />
+                </TouchableOpacity>
   
-            <TouchableOpacity
-                style={styles.cameraButton} 
-                onPress={() => {} }   
-            >
-                <Icon name="photo-camera" size={18} color="#fff" />
-            </TouchableOpacity>
+            {/* {
+                name !== undefined 
+                ?
+                    <TouchableOpacity
+                    style={styles.cameraButton} 
+                    onPress={ () => {
+                        setIsModalVisible(true)
+                    } }   
+                    >
+                        <Icon name="photo-camera" size={18} color="#fff" />
+                    </TouchableOpacity>
+                : 
+                <TouchableOpacity
+                    style={styles.cameraButton} 
+                    onPress={ () => Alert.alert('Type some text!') }   
+                    >
+                        <Icon name="photo-camera" size={18} color="#fff" />
+                </TouchableOpacity>
+            } */}
 
             <TouchableOpacity
                 style={styles.saveButton}
@@ -118,7 +155,29 @@ const TakeList = ({ route, navigation }) => {
                 <Text>Cancel</Text>
             </TouchableOpacity>
 
+            <Text>{photo}</Text>
+            <Image source={{ uri: photo }} style={{height: 300}} />
+
+            <Modal
+                animationType='slide'
+                visible={isModalVisible}
+            >
+                {
+                    photo ? (
+                          <Photo 
+                            photo={photo}
+                            onDeletePhoto={onChangePhoto}
+                            onClosePicture={onCloseModal}
+                         /> 
+                    ) : (
+                        <Camera onCloseCamera={onCloseModal} onTakePicture={onChangePhoto} />
+                    )
+                }
+
+            </Modal>
+
         </View>
+        </ScrollView>
     )
 }
 

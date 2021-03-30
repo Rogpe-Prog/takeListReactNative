@@ -14,7 +14,7 @@ const Main = ({ navigation }) => {
         //para não dar erro no AsyncStorage inicio com um "registro"
         const data = {
             id: '1',
-            name: 'Take a iten',
+            name: 'Take a item',
             description: 'description note'
         }
 
@@ -39,7 +39,7 @@ const Main = ({ navigation }) => {
 
     const onItemEdit = async (idItem) => {
         const itemEdit = books.find(itemEdi => itemEdi.id === idItem)
-        navigation.navigate('TakeList', { item: itemEdit, isEdit: true})
+        navigation.navigate('TakeList', { item: itemEdit, isEdit: true })
     }
 
     const onDelete = async (idItem) => {

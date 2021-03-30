@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 
 Icon.loadFont();
 
-const Appcam = () => {
+const Appcam = ({ navigation }) => {
     const camRef = useRef(null)
     const [type, setType] = useState(Camera.Constants.Type.back)
     const [hasPermission, setHaspermission] = useState(null)
@@ -47,12 +47,26 @@ const Appcam = () => {
                     flex: 1,
                     flexDirection: 'row',
                 }}>
+
+                    <TouchableOpacity style={{
+                            backgroundColor: 'transparent', 
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            bottom: 20,
+                            left: 5,
+                        }}
+                            onPress={ () => navigation.navigate('TakeList') }
+                        >
+                            <Icon name="arrow-back" size={38} color="#fff" />                              
+                    </TouchableOpacity>
+
+
                     <TouchableOpacity 
                         style={{ 
                             alignItems: 'center',
                             justifyContent: 'flex-end',
                             bottom: 20,
-                            left: 20,
+                            left: 30,
                         }}
                         onPress={ () => setType(
                             type === Camera.Constants.Type.back
@@ -69,7 +83,7 @@ const Appcam = () => {
                     alignItems: 'center',
                     justifyContent: 'flex-end',
                     bottom: 20,
-                    left: 40,
+                    left: 50,
                 }}
                     onPress={takePicture}
                 >
@@ -84,15 +98,48 @@ const Appcam = () => {
                         animationType={false}
                         visible={open}
                     >
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', margin: 20, }}>
-                            <TouchableOpacity style={{ margin: 10, }} onPress={() => setOpen(false)}>
+                        <View style={{
+                                flex: 1, 
+                                flexDirection: 'row',
+                                justifyContent: 'center', 
+                                alignItems: 'center', 
+                                
+                                 }}>
+                            <Image 
+                                style={{ 
+                                    width: '100%', 
+                                    height: 300, 
+                                    width: 300,  
+                                    borderRadius: 20, 
+                                    margin: 20,  
+                                }}
+                                source={{uri: capturedPhoto }}
+                            />
+                        </View>
+                        <View style={{
+                                flex: 1, 
+                                flexDirection: 'row',
+                                justifyContent: 'center', 
+                                alignItems: 'center', 
+                                 }}>
+                            
+                            <TouchableOpacity style={{ 
+                                margin: 10, 
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                            }} 
+                                onPress={() => navigation.navigate('TakeList', { image: capturedPhoto, imgs: true }) }>
+                                <Icon name="check" size={50} color="#27ae60" /> 
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ 
+                                margin: 10, 
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                            }} 
+                                onPress={() => setOpen(false)}>
                                 <Icon name="close" size={50} color="#ff0000" /> 
                             </TouchableOpacity>
 
-                            <Image 
-                                style={{ width: '100%', height: 300, borderRadius: 20 }}
-                                source={{uri: capturedPhoto }}
-                            />
                         </View>
                     </Modal>
                 }
