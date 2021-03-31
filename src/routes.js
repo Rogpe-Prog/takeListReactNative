@@ -13,7 +13,7 @@ const Routes = () => {
         <NavigationContainer>
 
         <Stack.Navigator>
-            <Stack.Screen 
+            <Stack.Screen
                 name="Main" 
                 component={Main} 
                 options={{
@@ -23,6 +23,7 @@ const Routes = () => {
                 },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
+                  fontSize: 28,
                   fontWeight: 'bold',
                   alignSelf: 'center',
                 },
@@ -40,8 +41,9 @@ const Routes = () => {
                 },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
-                fontWeight: 'bold',
-                alignSelf: 'center',
+                  fontSize: 28,
+                  fontWeight: 'bold',
+                  alignSelf: 'center',
                 },
               }}
             />

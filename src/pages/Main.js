@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { useTheme } from '@react-navigation/native';
 
 Icon.loadFont();
 
@@ -71,7 +72,7 @@ const Main = ({ navigation }) => {
                 <TouchableOpacity
                     style={styles.toolboxButton}
                     onPress={() => navigation.navigate('TakeList',  { item: '', isEdit: false})}>
-                    <Icon name="add" size={14} color="#fff" />
+                    <Icon name="add" size={20} color="#fff" />
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.toolboxButtonX}
@@ -97,13 +98,13 @@ const Main = ({ navigation }) => {
                     <TouchableOpacity 
                     style={styles.editButton} 
                     onPress={() => onItemEdit(item.id)}>
-                    <Icon name="create" size={14} color="#2ecc71" />
+                    <Icon name="create" size={20} color="#2ecc71" />
                     </TouchableOpacity>
                     
                     <TouchableOpacity 
                     style={styles.deleteButton} 
                     onPress={() => onDelete(item.id)}>
-                    <Icon name="delete" size={14} color="#e74c3c" />
+                    <Icon name="delete" size={20} color="#fff" />
                     </TouchableOpacity>
                 </View>
                 )} 
@@ -123,8 +124,8 @@ const styles = StyleSheet.create({
     toolboxButton: {
         backgroundColor: "#0984e3",
         borderRadius: 50,
-        width: 22,
-        height: 22,
+        width: 30,
+        height: 30,
         justifyContent: "center",
         alignItems: "center",
         marginRight: 15,
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 1,
-        fontSize: 16,
+        fontSize: 22,
         color: "#2d3436",
     },
     itensContainer: {
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemText: {
-        fontSize: 16,
+        fontSize: 22,
         color: '#2d3436',
     },
     itemRead: {
@@ -166,9 +167,17 @@ const styles = StyleSheet.create({
     },
     editButton: {
         marginRight: 10,
+        backgroundColor: '#000',
+        borderRadius: 25,
+        padding: 5,
+        margin: 3,
     },
     deleteButton: {
-        marginRight: 5,
+        marginRight: 10,
+        backgroundColor: 'red',
+        borderRadius: 25,
+        padding: 5,
+        margin: 3,
     },
 
 

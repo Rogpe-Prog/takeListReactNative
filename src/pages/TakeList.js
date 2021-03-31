@@ -56,12 +56,11 @@ const TakeList = ({ route, navigation }) => {
                     item.name = name
                     item.description = description
                     item.read = read,
-                    item.photo = photo,
-                    console.log('Edit: ' + item.photo)
+                    item.photo = photo
                     }
                     return item
                 })
-                console.log('Edit: ' + newItems)
+
                 await AsyncStorage.setItem('item', JSON.stringify(newItems))
     
             } else {
@@ -109,16 +108,14 @@ const TakeList = ({ route, navigation }) => {
                 onChangeText={text => setDescription(text)}
             />
 
-                <TouchableOpacity
-                    style={styles.cameraButton} 
-                    onPress={ () => {
-                        setIsModalVisible(true)
-                    } }   
-                    >
-                        <Icon name="photo-camera" size={18} color="#fff" />
-                </TouchableOpacity>
-  
-            {/* {
+            <View style={{
+                    flex: 1, 
+                    flexDirection: 'row',
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    }}>
+
+                {
                 name !== undefined 
                 ?
                     <TouchableOpacity
@@ -136,27 +133,34 @@ const TakeList = ({ route, navigation }) => {
                     >
                         <Icon name="photo-camera" size={18} color="#fff" />
                 </TouchableOpacity>
-            } */}
+            }
 
-            <TouchableOpacity
-                style={styles.saveButton}
-                icon="content-save" 
-                mode="contained" 
-                onPress={onSave}
-            >
-                <Text style={styles.textBtnSave}>{isEdit ? 'Edit' : 'Save'}</Text>
-               
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={navigation.goBack}
-            >
-                <Text>Cancel</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                    icon="content-save" 
+                    mode="contained" 
+                    onPress={onSave}
+                >
+                    <Text style={styles.textBtnSave}>{isEdit ? 'Edit' : 'Save'}</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={navigation.goBack}
+                >
+                    <Text style={styles.textBtnSave}>Cancel</Text>
+                </TouchableOpacity>
 
-            <Text>{photo}</Text>
-            <Image source={{ uri: photo }} style={{height: 300}} />
+            </View>
+
+
+
+
+            <View>
+                <Image 
+                    source={{ uri: photo }} 
+                    style={{height: 300, width: 320, alignSelf: 'center', borderColor: 'red' }} />
+            </View>
 
             <Modal
                 animationType='slide'
@@ -189,9 +193,10 @@ const styles = StyleSheet.create({
     },  
     pageTitle: {
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 20,
         marginBottom: 20,
         marginTop: 10,
+        fontWeight: 'bold',
     },
     input: {
         fontSize: 16,
@@ -202,26 +207,33 @@ const styles = StyleSheet.create({
     cameraButton: {
         backgroundColor: '#0984e3',
         borderRadius: 50,
-        width: 32,
-        height: 32,
+        width: 50,
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
         marginBottom: 20,
     },
     saveButton: {
-        backgroundColor: '#0984e3',
+        backgroundColor: '#00b894',
         alignSelf: 'center',
         borderRadius: 8,
         paddingVertical: 10,
         paddingHorizontal: 20,
         marginBottom: 20,
+        marginRight: 30,
+        marginLeft: 30,
       },
       saveButtonInvalid: {
         opacity: 0.5,
       },
       cancelButton: {
+        backgroundColor: '#e67e22',
         alignSelf: 'center',
+        borderRadius: 8,
+        marginBottom: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
       },
       cancelButtonText: {
         color: '#95a5a6',
